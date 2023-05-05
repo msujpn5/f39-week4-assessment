@@ -1,0 +1,23 @@
+body {
+    display:flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    background-color: #ee66aa;
+    font-family: sans-serif;
+}
+
+form, div {
+    display:block;
+    margin-top: 10px;
+    max-width: 600px
+}
+
+button {
+    margin-top: 20px;
+}
+
+h4 {
+    margin-top: 50px;
+}
