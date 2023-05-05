@@ -22,81 +22,86 @@ module.exports = {
         res.status(200).send(randomFortune);
     },
 
-    submitCompliment: (req, res) => {
-        const compliment = req.body.compliment
+    submitTask: (req, res) => {
+        const task = req.body.task
         const motivationLevel = req.body.motivationLevel
 
-        const newComp = {
-            compliment: compliment,
+        const newTask = {
+            task: task,
             motivationLevel: +motivationLevel
         }
 
-        database.push(newComp)
+        database.push(newTask)
 
         res.status(200).send(database)
 
     },
 
-    getNewCompliments: (req, res) => {
+    getNewTasks: (req, res) => {
         res.status(200).send(database)
     },
 
-    deleteCompliment: (req, res) => {
-        const compliment = req.query.compliment
+    increaseMotivation: (req, res) => {
+        const task = req.params.task
 
-        let matchingCompIndex
+        let matchingTaskObject
         for (let i = 0; i < database.length; i++) {
-            if (database[i].compliment === compliment) {
-                matchingCompIndex = i
+            if (database[i].task === task && database[i].motivationLevel < 5) {
+                matchingTaskObject = database[i]
+                database[i].motivationLevel += 1
+                break
+            } else {
+                res.status(400).send('Motivation levels can\'t go higher than 5')
+            }
+        }
+
+        if (matchingTaskObject) {
+            res.status(200).send(database)
+        } else {
+            res.status(400).send('This task does not exist')
+        }
+    },
+
+    decreaseMotivation: (req, res) => {
+        const task = req.params.task
+
+        let matchingTaskObject
+        for (let i = 0; i < database.length; i++) {
+            if (database[i].task === task && database[i].motivationLevel > 1) {
+                matchingTaskObject = database[i]
+                database[i].motivationLevel -= 1
+                break
+            } else {
+                res.status(400).send('Motivation levels can\'t go below 1')
+            }
+        }
+
+        if (matchingTaskObject) {
+            res.status(200).send(database)
+        } else {
+            res.status(400).send('This task does not exist')
+        }
+    },
+
+    deleteTask: (req, res) => {
+        const task = req.query.task
+
+        let matchingTaskIndex
+        for (let i = 0; i < database.length; i++) {
+            if (database[i].task === task) {
+                matchingTaskIndex = i
                 database.splice(i, 1)
                 break
             }
         }
 
-        if (matchingCompIndex !== undefined) {
+        if (matchingTaskIndex !== undefined) {
             res.status(200).send(database)
         } else {
-            res.status(400).send('No matching compliment found')
-        }
-    },
-
-    increaseMotivation: (req, res) => {
-        const compliment = req.params.compliment
-
-        let matchingComplimentObject
-        for (let i = 0; i < database.length; i++) {
-            if (database[i].compliment === compliment) {
-                matchingComplimentObject = database[i]
-                database[i].motivationLevel += 1
-                break;
-            }
-        }
-
-        if (matchingComplimentObject) {
-            res.status(200).send(database)
-        } else {
-            res.status(400).send('This compliment does not exist')
-        }
-    },
-
-    decreaseMotivation: (req, res) => {
-        const compliment = req.params.compliment
-
-        let matchingComplimentObject
-        for (let i = 0; i < database.length; i++) {
-            if (database[i].compliment === compliment) {
-                matchingComplimentObject = database[i]
-                database[i].motivationLevel -= 1
-                break;
-            }
-        }
-
-        if (matchingComplimentObject) {
-            res.status(200).send(database)
-        } else {
-            res.status(400).send('This compliment does not exist')
+            res.status(400).send('No matching task found')
         }
     }
+
 
     
 

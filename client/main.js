@@ -1,15 +1,15 @@
 const complimentBtn = document.getElementById("complimentButton")
 const fortuneBtn = document.getElementById("fortuneButton")
 const postForm = document.getElementById('post-form')
-const postCompliment = document.getElementById('post-compliment')
+const postTask = document.getElementById('post-task')
 const postMotivationLevel = document.getElementById('post-motivationLevel')
 const displayDiv = document.getElementById('display')
 const deleteForm = document.getElementById('delete-form')
-const deleteCompliment = document.getElementById('delete-compliment')
+const deleteTask = document.getElementById('delete-task')
 const putForm1 = document.getElementById('put-form1')
-const putCompliment1 = document.getElementById('put-compliment1')
+const putTask1 = document.getElementById('put-task1')
 const putForm2 = document.getElementById('put-form2')
-const putCompliment2 = document.getElementById('put-compliment2')
+const putTask2 = document.getElementById('put-task2')
 
 
 const getCompliment = () => {
@@ -35,16 +35,16 @@ fortuneBtn.addEventListener('click', getFortune)
 postForm.addEventListener('submit', (event) => {
     event.preventDefault()
 
-    let compBod = {
-        compliment: postCompliment.value,
+    let taskBod = {
+        task: postTask.value,
         motivationLevel : +postMotivationLevel.value
     }
 
-    axios.post('http://localhost:4000/api/submit-compliment', compBod)
+    axios.post('http://localhost:4000/api/submit-task', taskBod)
     .then((res) => {
         const database = res.data
         showDatabase(database)
-        postCompliment.value = ''
+        postTask.value = ''
         postMotivationLevel.value = ''
     })
     .catch((err) => {
@@ -54,10 +54,10 @@ postForm.addEventListener('submit', (event) => {
 
 deleteForm.addEventListener('submit', (event) => {
     event.preventDefault()
-    axios.delete('http://localhost:4000/api/delete-compliment?compliment=' + deleteCompliment.value)
+    axios.delete('http://localhost:4000/api/delete-task?task=' + deleteTask.value)
     .then((response) => {
         showDatabase(response.data)
-        deleteCompliment.value = ''
+        deleteTask.value = ''
     })
     
     .catch ((err) => {
@@ -68,7 +68,7 @@ deleteForm.addEventListener('submit', (event) => {
 
 putForm1.addEventListener('submit', (event) => {
     event.preventDefault()
-    axios.put('http://localhost:4000/api/increase-motivation/' + putCompliment1.value)
+    axios.put('http://localhost:4000/api/increase-motivation/' + putTask1.value)
     .then((response) => {
         showDatabase(response.data)
     })
@@ -79,7 +79,7 @@ putForm1.addEventListener('submit', (event) => {
 
 putForm2.addEventListener('submit', (event) => {
     event.preventDefault()
-    axios.put('http://localhost:4000/api/decrease-motivation/' + putCompliment2.value)
+    axios.put('http://localhost:4000/api/decrease-motivation/' + putTask2.value)
     .then((response) => {
         showDatabase(response.data)
     })
@@ -95,7 +95,7 @@ function showDatabase(db) {
 
     if(db.length === 0) {
         let dataP = document.createElement('p')
-        dataP.innerHTML = 'No compliments yet...'
+        dataP.innerHTML = 'No tasks yet...'
         displayDiv.appendChild(dataP)
         return
     }
@@ -104,7 +104,7 @@ function showDatabase(db) {
         let dataP = document.createElement('p')
 
 
-        dataP.innerHTML = `${db[i].compliment} has a motivation level of ${db[i].motivationLevel}`
+        dataP.innerHTML = `${db[i].task} has a motivation level of ${db[i].motivationLevel}`
 
         displayDiv.appendChild(dataP)
 
@@ -113,7 +113,7 @@ function showDatabase(db) {
 
 
 function getDatabaseForDisplay() {
-    axios.get('http://localhost:4000/api/get-newCompliments')
+    axios.get('http://localhost:4000/api/get-newTasks')
     .then((response) => {
         showDatabase(response.data)
     })
