@@ -25,15 +25,21 @@ module.exports = {
 
     submitCompliment: (req, res) => {
         const compliment = req.body.compliment
+        const motivationLevel = req.body.motivationLevel
 
         const newObj = {
-            compliment: compliment
+            compliment: compliment,
+            motivationLevel: +motivationLevel
         }
 
         database.push(newObj)
 
         res.status(200).send(database)
-    }
+    },
+
+    getNewCompliments: (req, res) => {
+        res.status(200).send(database)
+    },
 
     
 
