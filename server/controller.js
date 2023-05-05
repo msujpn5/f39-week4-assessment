@@ -1,6 +1,5 @@
 const database = []
 
-
 module.exports = {
 
     getCompliment: (req, res) => {
@@ -27,19 +26,77 @@ module.exports = {
         const compliment = req.body.compliment
         const motivationLevel = req.body.motivationLevel
 
-        const newObj = {
+        const newComp = {
             compliment: compliment,
             motivationLevel: +motivationLevel
         }
 
-        database.push(newObj)
+        database.push(newComp)
 
         res.status(200).send(database)
+
     },
 
     getNewCompliments: (req, res) => {
         res.status(200).send(database)
     },
+
+    deleteCompliment: (req, res) => {
+        const compliment = req.query.compliment
+
+        let matchingCompIndex
+        for (let i = 0; i < database.length; i++) {
+            if (database[i].compliment === compliment) {
+                matchingCompIndex = i
+                database.splice(i, 1)
+                break
+            }
+        }
+
+        if (matchingCompIndex !== undefined) {
+            res.status(200).send(database)
+        } else {
+            res.status(400).send('No matching compliment found')
+        }
+    },
+
+    increaseMotivation: (req, res) => {
+        const compliment = req.params.compliment
+
+        let matchingComplimentObject
+        for (let i = 0; i < database.length; i++) {
+            if (database[i].compliment === compliment) {
+                matchingComplimentObject = database[i]
+                database[i].motivationLevel += 1
+                break;
+            }
+        }
+
+        if (matchingComplimentObject) {
+            res.status(200).send(database)
+        } else {
+            res.status(400).send('This compliment does not exist')
+        }
+    },
+
+    decreaseMotivation: (req, res) => {
+        const compliment = req.params.compliment
+
+        let matchingComplimentObject
+        for (let i = 0; i < database.length; i++) {
+            if (database[i].compliment === compliment) {
+                matchingComplimentObject = database[i]
+                database[i].motivationLevel -= 1
+                break;
+            }
+        }
+
+        if (matchingComplimentObject) {
+            res.status(200).send(database)
+        } else {
+            res.status(400).send('This compliment does not exist')
+        }
+    }
 
     
 
